@@ -1,70 +1,170 @@
-# Getting Started with Create React App
+### Simple React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Create react app
 
-## Available Scripts
+```sh
+    npx create-react-app simple-react-app
+    cd simple-react-app
+    npm start
+```
 
-In the project directory, you can run:
+## Create components
 
-### `yarn start`
+Create a dir sr/components
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Create a file src/components/Greeting1.js, and add below code :
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```js
+import React, { Component } from "react";
 
-### `yarn test`
+class Greeting1 extends Component {
+  render() {
+    return (
+      <div className="Greeting">
+        <h1>Good Morning - G1</h1>
+      </div>
+    );
+  }
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Export the new component
 
-### `yarn build`
+```js
+export default Greeting1;
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Other ways of creating component
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```js
+import React, { Component } from "react";
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+function Greeting2() {
+  return (
+    <div className="Greeting2">
+      <h1>Good Morning - G2</h1>
+    </div>
+  );
+}
 
-### `yarn eject`
+export default Greeting2;
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+and
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```js
+import React, { Component } from "react";
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+const Greeting3 = () => {
+  return (
+    <div className="Greeting3">
+      <h1>Good Morning - G3</h1>
+    </div>
+  );
+};
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+export default Greeting3;
+```
 
-## Learn More
+# Note
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- the JSX syntax
+-
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Props
 
-### Code Splitting
+Remove the Greeting1 and Greeting2 from app.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Pass an attribute called time with a value in Greeting3 tag
 
-### Analyzing the Bundle Size
+```js
+<Greeting3 time="Morning" />
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Add an argument called props to the Greeting component
 
-### Making a Progressive Web App
+```js
+const Greeting3 = (props) => {
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Use props to fetch properties passed
 
-### Advanced Configuration
+```js
+<h1>Good {props.time}</h1>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+now the Greeting message will change as per the value passed
 
-### Deployment
+### State
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Use the class instead of function component, like Greeting1 in our case
 
-### `yarn build` fails to minify
+access the prod as this.props, where this refers to class
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```js
+<h1>Good {this.props.time} - G1</h1>
+```
+
+Change the greeting3 to greeting1 in app.js, see if it works
+
+Add a constructor to the class and assign the props value to state object
+
+```js
+  constructor(props) {
+    super(props);
+    this.state = { time: props.time };
+  }
+```
+
+Based on events state can be updated using setState() function
+
+Ex refresh on time intervals
+
+```js
+  componentDidMount() {
+    this.timerID = setInterval(() => this.refreshGreeting(), 10000);
+  }
+
+  refreshGreeting() {
+    this.setState((state, props) => ({
+      time: props.time,
+    }));
+  }
+```
+
+# NOte
+
+- React load only the component whoes state is changes
+- Only the part of the state can alsoe be changed
+- Reacts Creats a Virtual DOM, with states and compare with the one rendered and updated
+
+### use state
+
+react hooks - stat manuplication
+Functional Component
+
+use hooks called useState to update the state
+
+```js
+const [timeState, refreshTimeState] = useState({
+  time: props.time,
+});
+```
+
+Use another hook called useEffect to trigger update
+
+```js
+useEffect(() => {
+  setInterval(() => refreshGreeting(), 10000);
+});
+```
+
+define the function to update the state
+
+```js
+const refreshGreeting = () => {
+  refreshTimeState({
+    time: props.time,
+  });
+};
+```
